@@ -1,21 +1,29 @@
-'use client'
+import { Flex, Space, Typography } from 'antd'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-import { Layout, Space, Typography } from 'antd'
+import { Button, Card } from '@/components/ui'
+import { auth } from '@/lib/auth'
 
-const { Content } = Layout
-const { Title, Paragraph } = Typography
+export default async function HomePage() {
+  const session = await auth()
+  if (session?.user) redirect('/dashboard')
 
-export default function HomePage() {
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Content style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Space direction="vertical" size="large" style={{ textAlign: 'center' }}>
-          <Title>Welcome</Title>
-          <Paragraph type="secondary">
-            This is the target repo template. Workers will replace this page.
-          </Paragraph>
+    <Flex justify="center" align="center" style={{ minHeight: '100vh' }}>
+      <Card title="Welcome">
+        <Space direction="vertical">
+          <Typography.Text type="secondary">Sign in to continue.</Typography.Text>
+          <Space>
+            <Link href="/login">
+              <Button type="primary">Sign in</Button>
+            </Link>
+            <Link href="/register">
+              <Button>Register</Button>
+            </Link>
+          </Space>
         </Space>
-      </Content>
-    </Layout>
+      </Card>
+    </Flex>
   )
 }
