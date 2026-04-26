@@ -2,12 +2,9 @@
 
 import { Button as AntButton } from 'antd'
 
-type AllowedType = 'primary' | 'default' | 'text' | 'link'
-type AllowedSize = 'small' | 'middle' | 'large'
-
-type Props = {
-  type?: AllowedType
-  size?: AllowedSize
+export type ButtonProps = {
+  type?: 'primary' | 'default' | 'text' | 'link'
+  size?: 'small' | 'middle' | 'large'
   loading?: boolean
   disabled?: boolean
   danger?: boolean
@@ -20,6 +17,6 @@ type Props = {
 }
 
 /** Opinionated wrapper around AntD Button. Use `type="primary"` for the main CTA only. */
-export function Button({ type = 'default', size = 'middle', ...rest }: Props) {
+export function Button({ type = 'default', size = 'middle', ...rest }: ButtonProps) {
   return <AntButton type={type} size={size} {...rest} />
 }

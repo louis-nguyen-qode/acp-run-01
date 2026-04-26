@@ -1,8 +1,6 @@
-import { AntdRegistry } from '@ant-design/nextjs-registry'
-import { ConfigProvider } from 'antd'
 import { type Metadata } from 'next'
 
-import { theme } from '@/theme/tokens'
+import { Providers } from './providers'
 
 import './globals.css'
 
@@ -15,9 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <AntdRegistry>
-          <ConfigProvider theme={theme}>{children}</ConfigProvider>
-        </AntdRegistry>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

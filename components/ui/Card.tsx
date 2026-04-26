@@ -1,8 +1,8 @@
-import { Card as AntCard, type CardProps } from 'antd'
+import { Card as AntCard, type CardProps as AntCardProps } from 'antd'
 
-type Props = Pick<CardProps, 'title' | 'extra' | 'children' | 'loading' | 'bordered' | 'className' | 'size'>
+export type CardProps = Pick<AntCardProps, 'title' | 'extra' | 'children' | 'loading' | 'bordered' | 'className' | 'size'>
 
 /** Standard content card. Title lives in header; actions live in `extra`. */
-export function Card({ bordered = true, ...props }: Props) {
+export function Card({ bordered = true, ...props }: CardProps) {
   return <AntCard bordered={bordered} {...props} />
 }
