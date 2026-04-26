@@ -106,3 +106,29 @@ Hashes are stored in `User.passwordHash`. Plaintext is never persisted.
 |-------------------|------------------------------------------|
 | `AUTH_SECRET`     | Signs/encrypts JWTs. Required in prod.   |
 | `AUTH_TRUST_HOST` | Required when deploying behind a proxy.  |
+
+## Middleware composition (added 2026-04-26, Refs: 0KDZK0MJ)
+
+`middleware.ts` at the repo root uses `auth()` as a wrapper to protect `/dashboard` and all nested paths.
+
+```ts
+// middleware.ts
+import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+
+export default auth((req) => {
+  if (!req.auth && req.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', req.url))
+  }
+})
+
+export const config = { matcher: ['/dashboard/:path*'] }
+```
+
+### How it works
+
+- `auth(callback)` returns a Next.js middleware function.
+- Inside the callback, `req.auth` is `Session | null` — populated by NextAuth from the JWT cookie.
+- When `req.auth` is `null` the user is unauthenticated; the middleware issues a 307 redirect to `/login`.
+- The `matcher` restricts execution to `/dashboard/:path*` only — no other routes are affected.
+- Server Components can still call `await auth()` independently for their own session checks.
