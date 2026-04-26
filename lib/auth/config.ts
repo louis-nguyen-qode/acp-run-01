@@ -1,25 +1,33 @@
 import type { NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import { z } from 'zod'
 
 import { verifyPassword } from '@/lib/auth/password'
 import { prisma } from '@/lib/db'
 
+const credentialsSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+})
+
 export async function authorizeUser(
   credentials: Partial<Record<string, unknown>>
-): Promise<{ id: string; email: string } | null> {
-  const email = credentials['email']
-  const password = credentials['password']
+): Promise<{ id: string; email: string; name: string | null } | null> {
+  try {
+    const parsed = credentialsSchema.safeParse(credentials)
+    if (!parsed.success) return null
 
-  if (typeof email !== 'string' || typeof password !== 'string') return null
-  if (!email || !password) return null
+    const user = await prisma.user.findUnique({ where: { email: parsed.data.email } })
+    if (!user) return null
 
-  const user = await prisma.user.findUnique({ where: { email } })
-  if (!user) return null
+    const valid = await verifyPassword(parsed.data.password, user.passwordHash)
+    if (!valid) return null
 
-  const valid = await verifyPassword(password, user.passwordHash)
-  if (!valid) return null
-
-  return { id: user.id, email: user.email }
+    return { id: user.id, email: user.email, name: null }
+  } catch (err) {
+    console.error('[auth.authorize]', err)
+    return null
+  }
 }
 
 export const authConfig: NextAuthConfig = {

@@ -79,7 +79,28 @@ describe('authorizeUser', () => {
     )
   })
 
-  it('returns id and email on successful authentication', async () => {
+  it('returns null when email is malformed', async () => {
+    expect(await authorizeUser({ email: 'not-an-email', password: 'pass' })).toBeNull()
+  })
+
+  it('returns null and logs on unexpected internal error', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    mockFindUnique.mockRejectedValue(new Error('DB connection failed'))
+
+    const result = await authorizeUser({
+      email: testUser.email,
+      password: 'correct-password',
+    })
+
+    expect(result).toBeNull()
+    expect(consoleSpy).toHaveBeenCalledWith(
+      '[auth.authorize]',
+      expect.any(Error)
+    )
+    consoleSpy.mockRestore()
+  })
+
+  it('returns id, email, and name on successful authentication', async () => {
     mockFindUnique.mockResolvedValue(testUser)
     mockVerifyPassword.mockResolvedValue(true)
 
@@ -88,7 +109,7 @@ describe('authorizeUser', () => {
       password: 'correct-password',
     })
 
-    expect(result).toEqual({ id: testUser.id, email: testUser.email })
+    expect(result).toEqual({ id: testUser.id, email: testUser.email, name: null })
   })
 })
 
