@@ -47,6 +47,7 @@ module.exports = {
         'app/**/error.tsx',
         'app/**/not-found.tsx',
         'app/**/route.ts',
+        'middleware.ts',
         'next.config.js',
         'vitest.config.ts',
         'playwright.config.ts',
