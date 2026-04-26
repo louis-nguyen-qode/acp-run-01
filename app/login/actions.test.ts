@@ -1,3 +1,4 @@
+import { getRedirectError, RedirectType } from 'next/dist/client/components/redirect'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { loginAction } from './actions'
@@ -31,8 +32,23 @@ function makeFormData(email: string, password: string): FormData {
 describe('loginAction', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
+    vi.spyOn(console, 'error').mockImplementation(() => {})
     const { signIn } = await import('@/lib/auth')
     vi.mocked(signIn).mockResolvedValue(undefined)
+  })
+
+  it('re-throws NEXT_REDIRECT when signIn redirects on success', async () => {
+    const { signIn } = await import('@/lib/auth')
+    const redirectErr = getRedirectError('/dashboard', RedirectType.push)
+    vi.mocked(signIn).mockRejectedValue(redirectErr)
+    let caught: unknown
+    try {
+      await loginAction({}, makeFormData('user@example.com', 'password123'))
+    } catch (err) {
+      caught = err
+    }
+    expect(caught).toBe(redirectErr)
+    expect((caught as { digest: string }).digest).toMatch(/^NEXT_REDIRECT/)
   })
 
   it('calls signIn with credentials and redirectTo on valid input', async () => {
@@ -50,24 +66,28 @@ describe('loginAction', () => {
     expect(result).toEqual({})
   })
 
-  it('returns error for invalid credentials', async () => {
+  it('returns error for CredentialsSignin AuthError', async () => {
     const { signIn } = await import('@/lib/auth')
     vi.mocked(signIn).mockRejectedValue(new MockAuthError('CredentialsSignin'))
     const result = await loginAction({}, makeFormData('user@example.com', 'wrongpass'))
     expect(result).toEqual({ error: 'Invalid email or password' })
   })
 
-  it('rethrows non-AuthError errors so NEXT_REDIRECT propagates', async () => {
-    const { signIn } = await import('@/lib/auth')
-    const redirectError = Object.assign(new Error('NEXT_REDIRECT'), { digest: 'NEXT_REDIRECT' })
-    vi.mocked(signIn).mockRejectedValue(redirectError)
-    await expect(loginAction({}, makeFormData('user@example.com', 'password123'))).rejects.toThrow('NEXT_REDIRECT')
-  })
-
-  it('rethrows unexpected non-credentials AuthErrors', async () => {
+  it('returns authentication failed and logs for other AuthErrors', async () => {
     const { signIn } = await import('@/lib/auth')
     vi.mocked(signIn).mockRejectedValue(new MockAuthError('OAuthSignInError'))
-    await expect(loginAction({}, makeFormData('user@example.com', 'password123'))).rejects.toThrow()
+    const result = await loginAction({}, makeFormData('user@example.com', 'password123'))
+    expect(result).toEqual({ error: 'Authentication failed' })
+    expect(console.error).toHaveBeenCalledWith('[loginAction]', expect.any(MockAuthError))
+  })
+
+  it('re-throws generic non-AuthError, non-redirect errors', async () => {
+    const { signIn } = await import('@/lib/auth')
+    const genericError = new Error('Something went wrong')
+    vi.mocked(signIn).mockRejectedValue(genericError)
+    await expect(
+      loginAction({}, makeFormData('user@example.com', 'password123'))
+    ).rejects.toThrow('Something went wrong')
   })
 
   it('returns validation error for invalid email', async () => {
