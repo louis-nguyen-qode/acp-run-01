@@ -132,3 +132,31 @@ export const config = { matcher: ['/dashboard/:path*'] }
 - When `req.auth` is `null` the user is unauthenticated; the middleware issues a 307 redirect to `/login`.
 - The `matcher` restricts execution to `/dashboard/:path*` only — no other routes are affected.
 - Server Components can still call `await auth()` independently for their own session checks.
+
+## Sign-out pattern (added 2026-04-26, Refs: 0KDZK0MJ)
+
+Use a Server Component that wraps a native `<form>` with a server action. The server action calls `signOut({ redirectTo: '/login' })`. Use the `components/ui/Button` with `htmlType="submit"` for the trigger.
+
+```tsx
+// app/dashboard/SignOutButton.tsx
+import { signOut } from '@/lib/auth'
+import { Button } from '@/components/ui/Button'
+
+async function signOutAction(): Promise<never> {
+  'use server'
+  await signOut({ redirectTo: '/login' })
+}
+
+export function SignOutButton() {
+  return (
+    <form action={signOutAction}>
+      <Button htmlType="submit" danger>
+        Sign out
+      </Button>
+    </form>
+  )
+}
+```
+
+- The native `<form action={fn}>` pattern is required for server actions — AntD's `Form` wrapper does not support the `action` prop.
+- `signOut` from `@/lib/auth` handles session cookie clearing and the redirect.
