@@ -25,6 +25,8 @@ describe('next.config', () => {
     expect(pkgs).toContain('@ant-design/icons-svg')
     expect(pkgs).toContain('rc-pagination')
     expect(pkgs).toContain('rc-picker')
+    expect(pkgs).toContain('rc-notification')
+    expect(pkgs).toContain('rc-tooltip')
   })
 
   it('does not have antd in modularizeImports', () => {
