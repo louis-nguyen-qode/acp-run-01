@@ -16,6 +16,15 @@ vi.mock('next/navigation', () => ({
   }),
 }))
 
+vi.mock('./HomeClient', () => ({
+  HomeClient: () => (
+    <div>
+      <a href="/login">Sign in</a>
+      <a href="/register">Register</a>
+    </div>
+  ),
+}))
+
 type AuthFn = () => Promise<Session | null>
 const mockAuth = vi.mocked(auth as AuthFn)
 
