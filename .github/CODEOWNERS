@@ -1,0 +1,5 @@
+# CODEOWNERS
+# This file is committed but not enforced in autonomous mode.
+# In human-review mode, these paths would require approval from the listed owners.
+
+* @louis-nguyen-qode

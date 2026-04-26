@@ -1,0 +1,71 @@
+{
+  "name": "target-repo-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint && eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "prepare": "husky",
+    "check-test-files": "tsx scripts/check-test-files.ts",
+    "check-frontmatter": "tsx scripts/check-frontmatter.ts",
+    "depcruise": "depcruise src --config .dependency-cruiser.cjs"
+  },
+  "dependencies": {
+    "@ant-design/icons": "5.3.7",
+    "@auth/core": "0.34.2",
+    "@prisma/client": "5.14.0",
+    "antd": "5.17.4",
+    "bcryptjs": "2.4.3",
+    "next": "14.2.4",
+    "next-auth": "5.0.0-beta.19",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zod": "3.23.8",
+    "@ant-design/nextjs-registry": "1.0.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.3.0",
+    "@commitlint/config-conventional": "19.2.2",
+    "@playwright/test": "1.44.1",
+    "@testing-library/jest-dom": "6.4.6",
+    "@testing-library/react": "16.0.0",
+    "@testing-library/user-event": "14.5.2",
+    "@types/bcryptjs": "2.4.6",
+    "@types/node": "20.14.2",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "4.3.1",
+    "@vitest/coverage-v8": "1.6.0",
+    "dependency-cruiser": "16.3.3",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.4",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-jsx-a11y": "6.8.0",
+    "husky": "9.0.11",
+    "jsdom": "24.1.0",
+    "lint-staged": "15.2.7",
+    "playwright": "1.44.1",
+    "prettier": "3.3.2",
+    "prisma": "5.14.0",
+    "tsx": "4.15.7",
+    "typescript": "5.4.5",
+    "vitest": "1.6.0",
+    "@typescript-eslint/eslint-plugin": "7.13.0",
+    "@typescript-eslint/parser": "7.13.0",
+    "eslint-import-resolver-typescript": "3.6.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --max-warnings 0 --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": "prettier --write"
+  }
+}

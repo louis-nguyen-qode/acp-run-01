@@ -1,0 +1,25 @@
+name: Notify Orchestrator
+
+on:
+  check_suite:
+    types: [completed]
+
+jobs:
+  notify:
+    name: Notify orchestrator on CI complete
+    runs-on: ubuntu-latest
+    if: github.event.check_suite.conclusion != null
+
+    steps:
+      - name: Notify orchestrator
+        run: |
+          curl -s -X POST "${{ secrets.ORCHESTRATOR_URL }}/api/internal/ci-complete" \
+            -H "Content-Type: application/json" \
+            -H "X-Orchestrator-Secret: ${{ secrets.ORCHESTRATOR_SECRET }}" \
+            -d '{
+              "repo": "${{ github.repository }}",
+              "sha": "${{ github.event.check_suite.head_sha }}",
+              "conclusion": "${{ github.event.check_suite.conclusion }}",
+              "branch": "${{ github.event.check_suite.head_branch }}"
+            }'
+        continue-on-error: true  # never block CI on orchestrator being down
