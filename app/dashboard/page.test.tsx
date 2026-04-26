@@ -16,8 +16,13 @@ vi.mock('next/navigation', () => ({
   }),
 }))
 
-vi.mock('./SignOutButton', () => ({
-  SignOutButton: () => <button type="submit">Sign out</button>,
+vi.mock('./DashboardPageClient', () => ({
+  DashboardPageClient: ({ email }: { email: string }) => (
+    <div>
+      <span>{email}</span>
+      <button type="submit">Sign out</button>
+    </div>
+  ),
 }))
 
 type AuthFn = () => Promise<Session | null>
