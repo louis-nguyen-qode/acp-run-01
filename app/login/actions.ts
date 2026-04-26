@@ -1,5 +1,6 @@
 'use server'
 
+import { isRedirectError } from 'next/dist/client/components/redirect'
 import { AuthError } from 'next-auth'
 import { z } from 'zod'
 
@@ -22,7 +23,7 @@ export async function loginAction(
   })
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Validation failed' }
+    return { error: parsed.error.issues[0]?.message ?? 'Email and password are required' }
   }
 
   const { email, password } = parsed.data
@@ -30,8 +31,15 @@ export async function loginAction(
   try {
     await signIn('credentials', { email, password, redirectTo: '/dashboard' })
   } catch (err) {
+    if (isRedirectError(err)) {
+      throw err
+    }
     if (err instanceof AuthError && err.type === 'CredentialsSignin') {
       return { error: 'Invalid email or password' }
+    }
+    if (err instanceof AuthError) {
+      console.error('[loginAction]', err)
+      return { error: 'Authentication failed' }
     }
     throw err
   }
