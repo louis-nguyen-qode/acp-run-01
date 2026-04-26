@@ -87,6 +87,36 @@ session.user.image
 
 Credentials providers in NextAuth v5 require `session: { strategy: 'jwt' }`. Database sessions are only available with OAuth providers that use an adapter. JWT sessions store the session data in an encrypted HTTP-only cookie — no extra DB table is needed.
 
+## authorize() must never throw (added 2026-04-26, Refs: 6C8FEWE2)
+
+The Credentials provider's `authorize()` function **must always return `null` on failure — never throw**. Throwing causes NextAuth to wrap the error as a `CallbackRouteError` (authjs.dev/errors#callbackrouteerror), masking the real cause and breaking the sign-in flow.
+
+Rules enforced in `lib/auth/config.ts`:
+
+1. Input is validated with a zod schema (`credentialsSchema`) inside `safeParse` — returns `null` on parse failure.
+2. Prisma lookup returns `null` if user not found — never throws to the caller.
+3. `verifyPassword` result is checked — returns `null` on mismatch.
+4. The entire body is wrapped in `try/catch`; unexpected errors are logged with `console.error('[auth.authorize]', err)` and `null` is returned.
+5. Success returns `{ id, email, name }` with no password hash exposed.
+
+```ts
+// lib/auth/config.ts — correct pattern
+async function authorizeUser(credentials) {
+  try {
+    const parsed = credentialsSchema.safeParse(credentials)
+    if (!parsed.success) return null
+    const user = await prisma.user.findUnique({ where: { email: parsed.data.email } })
+    if (!user) return null
+    const valid = await verifyPassword(parsed.data.password, user.passwordHash)
+    if (!valid) return null
+    return { id: user.id, email: user.email, name: null }
+  } catch (err) {
+    console.error('[auth.authorize]', err)
+    return null
+  }
+}
+```
+
 ## Password hashing
 
 Use the helpers in `lib/auth/password.ts`:
