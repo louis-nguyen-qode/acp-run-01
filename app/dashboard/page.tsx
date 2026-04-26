@@ -6,6 +6,8 @@ import { auth } from '@/lib/auth'
 
 import { SignOutButton } from './SignOutButton'
 
+const { Text } = Typography
+
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user) redirect('/login')
@@ -14,7 +16,7 @@ export default async function DashboardPage() {
     <Flex justify="center" align="center" style={{ minHeight: '100vh' }}>
       <Card title="Dashboard">
         <Space direction="vertical">
-          <Typography.Text>Welcome, {session.user.email}</Typography.Text>
+          <Text>Welcome, {session.user.email}</Text>
           <SignOutButton />
         </Space>
       </Card>
