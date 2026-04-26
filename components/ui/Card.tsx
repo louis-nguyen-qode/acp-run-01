@@ -1,3 +1,5 @@
+'use client'
+
 import { Card as AntCard, type CardProps as AntCardProps } from 'antd'
 
 export type CardProps = Pick<AntCardProps, 'title' | 'extra' | 'children' | 'loading' | 'bordered' | 'className' | 'size'>
