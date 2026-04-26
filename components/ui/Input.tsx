@@ -3,7 +3,7 @@
 import { Input as AntInput } from 'antd'
 import type { InputProps as AntInputProps, PasswordProps } from 'antd/es/input'
 
-type Props = Pick<
+export type InputProps = Pick<
   AntInputProps,
   | 'value'
   | 'onChange'
@@ -18,13 +18,13 @@ type Props = Pick<
   | 'autoComplete'
 >
 
-type PasswordInputProps = Pick<
+export type PasswordInputProps = Pick<
   PasswordProps,
   'value' | 'onChange' | 'placeholder' | 'disabled' | 'size' | 'id' | 'name' | 'autoComplete'
 >
 
 /** Text input. Use inside AntD <Form.Item> for validation display. */
-export function Input(props: Props) {
+export function Input(props: InputProps) {
   return <AntInput {...props} />
 }
 
