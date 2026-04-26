@@ -15,7 +15,9 @@
     "prepare": "husky",
     "check-test-files": "tsx scripts/check-test-files.ts",
     "check-frontmatter": "tsx scripts/check-frontmatter.ts",
-    "depcruise": "depcruise src --config .dependency-cruiser.cjs"
+    "depcruise": "depcruise src --config .dependency-cruiser.cjs",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate"
   },
   "dependencies": {
     "@ant-design/icons": "5.3.7",

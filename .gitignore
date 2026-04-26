@@ -6,6 +6,7 @@ node_modules/
 dist/
 coverage/
 *.db
+*.db-journal
 *.db-shm
 *.db-wal
 .DS_Store
