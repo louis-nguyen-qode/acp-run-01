@@ -24,6 +24,12 @@ vi.mock('next/link', () => ({
   ),
 }))
 
+vi.mock('@/components/brand/BrandMark', () => ({
+  BrandMark: ({ size }: { size?: string }) => (
+    <div data-testid="brand-mark" data-size={size}>qode.world</div>
+  ),
+}))
+
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
@@ -45,6 +51,13 @@ describe('LoginForm', () => {
     mockUseFormState.mockReturnValue([{}, vi.fn()])
   })
 
+  it('renders the BrandMark with lg size', () => {
+    render(<LoginForm registered={false} />)
+    const brand = screen.getByTestId('brand-mark')
+    expect(brand).toBeInTheDocument()
+    expect(brand).toHaveAttribute('data-size', 'lg')
+  })
+
   it('renders email input', () => {
     render(<LoginForm registered={false} />)
     expect(screen.getByPlaceholderText('you@example.com')).toBeInTheDocument()
@@ -55,14 +68,14 @@ describe('LoginForm', () => {
     expect(screen.getByPlaceholderText('••••••••')).toBeInTheDocument()
   })
 
-  it('renders sign in button', () => {
+  it('renders Log In button', () => {
     render(<LoginForm registered={false} />)
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument()
   })
 
-  it('renders create account link', () => {
+  it('renders sign up link', () => {
     render(<LoginForm registered={false} />)
-    expect(screen.getByRole('link', { name: /create one/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /sign up/i })).toBeInTheDocument()
   })
 
   it('renders email and password labels', () => {
@@ -99,7 +112,7 @@ describe('LoginForm', () => {
     render(<LoginForm registered={false} />)
     await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'user@example.com')
     await userEvent.type(screen.getByPlaceholderText('••••••••'), 'password123')
-    await userEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    await userEvent.click(screen.getByRole('button', { name: /log in/i }))
     await waitFor(() => expect(mockDispatch).toHaveBeenCalledTimes(1))
   })
 })
