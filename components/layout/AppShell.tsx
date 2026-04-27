@@ -1,3 +1,5 @@
+'use client'
+
 import { Layout } from 'antd'
 
 import { tokens } from '@/theme/tokens'
