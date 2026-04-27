@@ -1,6 +1,6 @@
 'use client'
 
-import { Alert, Col, Layout, Row, Typography } from 'antd'
+import { Alert, Col, Row, Typography } from 'antd'
 import Link from 'next/link'
 import { useTransition } from 'react'
 import { useFormState } from 'react-dom'
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Form, FormItem } from '@/components/ui/Form'
 import { Input, PasswordInput } from '@/components/ui/Input'
+import { Content, Layout } from '@/components/ui/Layout'
 import { tokens } from '@/theme/tokens'
 
 import { registerAction } from './actions'
@@ -31,7 +32,7 @@ export function RegisterForm() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Layout.Content>
+      <Content>
         <Row justify="center" align="middle" style={{ minHeight: '100vh', padding: tokens.spacing.lg }}>
           <Col xs={22} sm={20} md={16} lg={12} xl={8}>
             <Card title="Create account">
@@ -78,7 +79,7 @@ export function RegisterForm() {
             </Card>
           </Col>
         </Row>
-      </Layout.Content>
+      </Content>
     </Layout>
   )
 }
