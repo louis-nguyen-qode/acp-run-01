@@ -9,3 +9,6 @@ export type { FormProps, FormItemProps } from './Form'
 
 export { Card } from './Card'
 export type { CardProps } from './Card'
+
+export { Layout, Header, Content, Footer, Sider } from './Layout'
+export type { LayoutProps, HeaderProps, ContentProps, FooterProps, SiderProps } from './Layout'
