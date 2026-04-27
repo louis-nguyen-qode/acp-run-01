@@ -16,4 +16,5 @@ updated: "2026-04-26"
 
 ## Index
 
-*(No ADRs yet — populated by workers as decisions are made)*
+- [001-nextauth-middleware-dashboard.md](001-nextauth-middleware-dashboard.md) — NextAuth v5 Edge middleware for /dashboard auth gate
+- [002-antd-transpile-packages-barrel-fix.md](002-antd-transpile-packages-barrel-fix.md) — antd transpilePackages + disable barrel optimizer (fixes __barrel_optimize__ RSC error)

@@ -14,6 +14,8 @@ const nextConfig = {
     'rc-picker',
     'rc-notification',
     'rc-tooltip',
+    'rc-tree',
+    'rc-table',
   ],
 }
 
