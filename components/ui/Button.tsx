@@ -14,6 +14,8 @@ export type ButtonProps = {
   children?: React.ReactNode
   className?: string
   block?: boolean
+  style?: React.CSSProperties
+  'aria-label'?: string
 }
 
 /** Opinionated wrapper around AntD Button. Use `type="primary"` for the main CTA only. */
