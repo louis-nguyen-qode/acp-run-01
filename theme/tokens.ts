@@ -11,9 +11,15 @@ const colors = {
   textDisabled: '#9CA3AF',
   bg: '#FFFFFF',
   bgLayout: '#F9FAFB',
-  bgElevated: '#FFFFFF',
+  bgElevated: '#fafafa',
   border: '#E5E7EB',
   borderStrong: '#D1D5DB',
+  // IG-style tokens
+  brandBlack: '#000000',
+  brandWhite: '#ffffff',
+  borderSubtle: '#dbdbdb',
+  textMuted: '#737373',
+  accent: '#0095f6',
 } as const
 
 const spacing = {
@@ -23,6 +29,9 @@ const spacing = {
   lg: 24,
   xl: 32,
   xxl: 48,
+  // IG-style nav heights
+  navHeight: 60,
+  bottomNavHeight: 50,
 } as const
 
 const fontSize = {
@@ -41,6 +50,15 @@ const radius = {
   lg: 8,
   xl: 12,
   full: 9999,
+  // IG-style radii
+  card: 4,
+  button: 8,
 } as const
 
-export const tokens = { colors, spacing, fontSize, radius } as const
+const typography = {
+  bodyFont: 'system-ui, -apple-system, sans-serif',
+  // wordmark font for the brand header
+  brandFont: "'Billabong', cursive",
+} as const
+
+export const tokens = { colors, spacing, fontSize, radius, typography } as const
