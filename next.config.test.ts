@@ -27,6 +27,8 @@ describe('next.config', () => {
     expect(pkgs).toContain('rc-picker')
     expect(pkgs).toContain('rc-notification')
     expect(pkgs).toContain('rc-tooltip')
+    expect(pkgs).toContain('rc-tree')
+    expect(pkgs).toContain('rc-table')
   })
 
   it('does not have antd in modularizeImports', () => {
